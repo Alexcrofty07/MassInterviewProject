@@ -5,12 +5,24 @@ namespace MassInterviewProject
     public class SentenceTransformer
     {
         WordFilter profanities = new();
+
+        /// <summary>
+        /// Ask user for string, creates a nullable string variable with response.
+        /// </summary>
+        /// <returns></returns>
         public static string? GetInput()
         {
-            Console.Out.WriteLine("Pleaase enter your string: \n");
+            Console.Out.WriteLine("Please enter your string, followed by any possible transformation: \n");
             return Console.ReadLine();
         }
 
+        /// <summary>
+        /// Search the inputted string for the console commands by searching for the " -" 
+        /// string which indicates the start of the command. 
+        /// Then add each subsequent letter to list of strings to be processed later.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static List<string> GetCommandsFromInput(string input)
         {
             List<string> commands = [];
@@ -29,6 +41,13 @@ namespace MassInterviewProject
             return commands;
         }
 
+        /// <summary>
+        /// Takes the input and the created list of commands to format. By default creates sentence case, otherwise 
+        /// works with the commands
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="commands"></param>
+        /// <returns></returns>
         public static string FormatOutput(string input, List<string> commands)
         {
             if (commands != null && commands.Count > 0)
@@ -65,22 +84,31 @@ namespace MassInterviewProject
             }
         }
 
-        public static string FilterOutputForProfanity(string unformattedInput)
+        /// <summary>
+        /// Search for each profanity in word list and check if input contains 
+        /// If it does, replace with correct number of * depending on profanity length 
+        /// </summary>
+        /// <param name="unfilteredInput"></param>
+        /// <returns></returns>
+        public static string FilterOutputForProfanity(string unfilteredInput)
         {
-            string filteredInput = unformattedInput;
+            string filteredInput = unfilteredInput;
             foreach (string profanity in WordFilter.BannedWords)
             {
-                if (unformattedInput.Contains(profanity, StringComparison.CurrentCultureIgnoreCase))
+                if (unfilteredInput.Contains(profanity, StringComparison.CurrentCultureIgnoreCase))
                 {
                     filteredInput = Regex.Replace(filteredInput, profanity, new String('*', profanity.Length), RegexOptions.IgnoreCase);
                 }
             }
 
-            string s = filteredInput ?? unformattedInput;
+            string s = filteredInput ?? unfilteredInput;
 
             return s;
         }
 
+        /// <summary>
+        /// Main function, call the functionality methods and return either transformed output or error message to user. 
+        /// </summary>
         public static void Main()
         {
             string? userInput = GetInput();
